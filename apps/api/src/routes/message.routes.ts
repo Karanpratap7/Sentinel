@@ -17,9 +17,17 @@ messageRouter.post("/", async (req, res) => {
 })
 
 messageRouter.get("/", async (req, res) => {
-    const { roomId } = req.query;
-    if (!roomId) return res.sendStatus(400);
+    const roomId = req.query.roomId as string;
+    
+    if (!roomId) {
+        return res.status(400).json({ error: "roomId is required" });
+    }
 
-    const messages = await getMessagesByRoom(roomId as string);
-    res.json(messages);
-})
+    try{
+        const messages = await getMessagesByRoom(roomId);
+        res.json(messages);
+    } catch (err) {
+        console.error("[API] getMessagesByRoom failed:", err);
+        res.status(500).json({ error: "Internal error" });
+    }
+});
