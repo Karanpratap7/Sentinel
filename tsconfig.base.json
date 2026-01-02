@@ -1,0 +1,36 @@
+{
+    // Base TypeScript configuration for the repository
+    "compilerOptions": {
+        "target": "ES2020",
+        "module": "ESNext",
+        "lib": ["ES2020", "DOM"],
+        "moduleResolution": "node",
+        "allowJs": false,
+        "jsx": "react-jsx",
+        "strict": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "skipLibCheck": true,
+        "resolveJsonModule": true,
+        "isolatedModules": false,
+        "incremental": true,
+        "tsBuildInfoFile": ".tsbuildinfo",
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["src/*"],
+            "@shared/*": ["packages/shared/*"]
+        },
+        "rootDir": ".",
+        "outDir": "dist"
+    },
+
+    // Project-wide includes/excludes; adjust to your repo layout
+    "include": ["src", "apps", "packages"],
+    "exclude": ["node_modules", "dist", "build"]
+}
