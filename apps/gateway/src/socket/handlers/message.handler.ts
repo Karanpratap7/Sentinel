@@ -1,0 +1,54 @@
+import { WebSocket } from "ws";
+import { publishMessage } from "../../redis/pubsub.js";
+import { canSendMessage } from "../../redis/rateLimit.js";
+
+const API_URL = process.env.API_URL || "http://localhost:3000";
+const QUEUE_URL = process.env.QUEUE_URL || "http://localhost:3002";
+
+export async function handleSendMessage(
+    ws:WebSocket,
+    payload:{
+        roomId: string;
+        content: string;
+    }
+)   {
+    if (!ws.user) return;
+    const user = ws.user;
+    const { roomId, content } = payload;
+
+    if (!await canSendMessage(roomId, user.id)) {
+        ws.send(JSON.stringify({
+            type: "ERROR",
+            payload: { message: "Rate limit exceeded" }
+        }));
+        return;
+    }
+
+    const response = await fetch(`${API_URL}/messages`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json" },
+        body: JSON.stringify({
+            roomId: payload.roomId,
+            senderId: user.id,
+            content: payload.content
+        })
+    });
+
+    if (!response.ok) return;
+
+    const message = await response.json();
+
+    console.log("[gateway] about to publish MESSAGE_CREATED");
+    await publishMessage("MESSAGE_CREATED", message);
+    console.log("[gateway] publish MESSAGE_CREATED done");
+
+    // enqueue moderation (fire and forget)
+    await fetch(`${QUEUE_URL}/moderate`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json" },
+        body: JSON.stringify({
+            messageId: message.id,
+            content: message.content
+        })
+    });
+}
