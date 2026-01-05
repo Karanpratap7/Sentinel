@@ -12,40 +12,21 @@ export function startSubscriber() {
     redis.subscribe("sentinel-events");
 
     redis.on("message", (_channel, raw) => {
-        console.log("[subscriber] raw:", raw);
+        const event = JSON.parse(raw);
 
-        const parsed = JSON.parse(raw);
-        const event = parsed.event;
-        const data = parsed.data;
+        if (!event) return;
 
-        console.log("[subscriber] event:", event);
-
-        if (!event || !data) return;
-
-        switch (event) {
+        switch (event.type) {
             case "MESSAGE_CREATED":
-                broadcastToRoom(data.room_id, {
-                    type: "MESSAGE_CREATED",
-                    payload: data
-                });
+                broadcastToRoom(event.payload.room_id, event);
                 break;
 
             case "USER_TYPING":
-                broadcastToRoom(data.room_id, {
-                    type: "USER_TYPING",
-                    payload: data
-                });
+                broadcastToRoom(event.payload.room_id, event);
                 break;
 
             case "MESSAGE_UPDATED":
-                broadcastToRoom(data.room_id, {
-                    type: "MESSAGE_UPDATED",
-                    payload: {
-                        messageId: data.messageId,
-                        roomId: data.room_id,
-                        status: data.status
-                    }
-                });
+                broadcastToRoom(event.payload.room_id, event);
                 break;
         }
     });

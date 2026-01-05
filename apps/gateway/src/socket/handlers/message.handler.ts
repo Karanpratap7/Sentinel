@@ -1,6 +1,7 @@
 import { WebSocket } from "ws";
 import { publishMessage } from "../../redis/pubsub.js";
 import { canSendMessage } from "../../redis/rateLimit.js";
+import { toMessageCreatedEvent } from "../../mappers/message.mapper.js";
 
 const API_URL = process.env.API_URL || "http://localhost:3000";
 const QUEUE_URL = process.env.QUEUE_URL || "http://localhost:3002";
@@ -38,9 +39,8 @@ export async function handleSendMessage(
 
     const message = await response.json();
 
-    console.log("[gateway] about to publish MESSAGE_CREATED");
-    await publishMessage("MESSAGE_CREATED", message);
-    console.log("[gateway] publish MESSAGE_CREATED done");
+    const event = toMessageCreatedEvent(message);
+    publishMessage(event);
 
     // enqueue moderation (fire and forget)
     fetch(`${QUEUE_URL}/moderate`, {
@@ -51,6 +51,6 @@ export async function handleSendMessage(
             content: message.content
         })
     }).catch(err => {
-        console.warn("[gateway] moderation service unavailable");
+        console.warn("[gateway] moderation service unavailable: ", err);
     }); 
 }
