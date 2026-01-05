@@ -43,12 +43,14 @@ export async function handleSendMessage(
     console.log("[gateway] publish MESSAGE_CREATED done");
 
     // enqueue moderation (fire and forget)
-    await fetch(`${QUEUE_URL}/moderate`, {
+    fetch(`${QUEUE_URL}/moderate`, {
         method: "POST",
         headers: {"Content-Type": "application/json" },
         body: JSON.stringify({
             messageId: message.id,
             content: message.content
         })
-    });
+    }).catch(err => {
+        console.warn("[gateway] moderation service unavailable");
+    }); 
 }
