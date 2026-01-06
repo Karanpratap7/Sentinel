@@ -40,6 +40,7 @@ export const getMessagesByRoom = async (roomId: string) => {
 }
 
 export const editMessage = async (messageId: string, content: string) => {
+    console.log("[API][editMessage] input:", { messageId, content });
     const result = await pool.query(
         `
         UPDATE messages
@@ -50,6 +51,9 @@ export const editMessage = async (messageId: string, content: string) => {
         [content, messageId]
     );
 
+    console.log("[API][editMessage] rowCount:", result.rowCount);
+    console.log("[API][editMessage] rows:", result.rows);
+    
     return result.rows[0];
 }
 

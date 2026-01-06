@@ -2,6 +2,8 @@ import { WebSocket } from "ws";
 import { handleSendMessage } from "./handlers/message.handler.js";
 import { handleTyping } from "./handlers/typing.handler.js";
 import { handleJoinRoom } from "./handlers/join.handler.js";
+import { handleEditMessage } from "./handlers/edit.handler.js";
+import { handleRedactMessage } from "./handlers/redact.handler.js";
 
 export function routeMessage(ws: WebSocket, raw: string) {
     console.log("[router] incoming raw:", raw);
@@ -23,11 +25,16 @@ export function routeMessage(ws: WebSocket, raw: string) {
             handleJoinRoom(ws, payload);
             break;
         case "SEND_MESSAGE":
-            console.log("[router] payload.type =", payload.type);
             handleSendMessage(ws, payload);
             break;
         case "TYPING":
             handleTyping(ws, payload);
+            break;
+        case "EDITED_MESSAGE":
+            handleEditMessage(ws, payload);
+            break;
+        case "REDACTED_MESSAGE":
+            handleRedactMessage(ws, payload);
             break;
         default:
             //silently ignore junk
