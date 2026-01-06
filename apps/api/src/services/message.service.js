@@ -26,12 +26,15 @@ export const getMessagesByRoom = async (roomId) => {
     return result.rows;
 };
 export const editMessage = async (messageId, content) => {
+    console.log("[API][editMessage] input:", { messageId, content });
     const result = await pool.query(`
         UPDATE messages
         SET content = $1
         WHERE id = $2
         RETURNING *
         `, [content, messageId]);
+    console.log("[API][editMessage] rowCount:", result.rowCount);
+    console.log("[API][editMessage] rows:", result.rows);
     return result.rows[0];
 };
 export const redactMessage = async (messageId) => {

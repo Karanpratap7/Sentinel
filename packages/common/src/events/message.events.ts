@@ -27,8 +27,29 @@ type UserTypingEvent = {
     };
 };
 
-export type { MessageCreatedEvent, MessageUpdatedEvent, UserTypingEvent };
+type MessageEditedEvent = {
+    type: "MESSAGE_EDITED";
+    payload: {
+        messageId: string;
+        roomId: string;
+        content: string;
+        editedAt: string;
+    };
+};
+
+type MessageRedactedEvent = {
+    type: "MESSAGE_REDACTED";
+    payload: {
+        messageId: string;
+        roomId: string;
+        reason?: "moderation" | "user";
+    };
+};
+
+export type { MessageCreatedEvent, MessageUpdatedEvent, UserTypingEvent, MessageEditedEvent, MessageRedactedEvent };
 export type GatewayEvent =
     | MessageCreatedEvent
     | MessageUpdatedEvent
-    | UserTypingEvent;
+    | UserTypingEvent
+    | MessageEditedEvent
+    | MessageRedactedEvent;

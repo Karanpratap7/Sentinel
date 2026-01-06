@@ -44,6 +44,10 @@ messageRouter.patch("/:id", async (req, res) => {
     try {
         const message = await editMessage(id, content);
         res.json(message);
+        console.log("[API] PATCH /messages", {
+            id,
+            body: req.body
+        });
     } catch (err) {
         console.error("[API] editMessage failed: ", err);
         res.status(500).json({ error: "Internal Error" });
