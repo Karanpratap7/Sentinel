@@ -10,6 +10,8 @@ export default function Page() {
   const [roomId] = useState("room-1");
   const [connected, setConnected] = useState(false);
   const [joined, setJoined] = useState(false);
+  const [message, setMessage] = useState("");
+  const [token, setToken] = useState("");
 
   function append(msg: string) {
     setLog(l => [...l, msg]);
@@ -78,12 +80,19 @@ export default function Page() {
         <h2 style={{ marginBottom: 16 }}>Socket Room</h2>
 
         <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
+          <input
+            type="text"
+            placeholder="Enter token"
+            value={token}
+            onChange={(e) => setToken(e.target.value)}
+            style={inputStyle}
+          />
           <button
             onClick={() => {
-              connect("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzZXItMiIsInVzZXJuYW1lIjoiQiIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzY3MzYwMjYxfQ.2gYrsV2itVWIHNKdZeJr9zQtcc2e2Woc8-W72vE4I6M", onEvent);
+              connect(token, onEvent);
               setConnected(true);
             }}
-            disabled={connected}
+            disabled={connected || !token}
             style={buttonStyle}
           >
             {connected ? "Connected" : "Connect"}
@@ -96,12 +105,22 @@ export default function Page() {
           >
             {joined ? "Joined" : "Join"}
           </button>
+        </div>
 
+        <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
+          <input
+            type="text"
+            placeholder="Type your message..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            style={inputStyle}
+          />
           <button
-            onClick={() =>
-              send({ type: "SEND_MESSAGE", roomId, content: "hello" })
-            }
-            disabled={!joined}
+            onClick={() => {
+              send({ type: "SEND_MESSAGE", roomId, content: message });
+              setMessage("");
+            }}
+            disabled={!joined || !message.trim()}
             style={buttonStyle}
           >
             Send
@@ -126,6 +145,16 @@ export default function Page() {
     </main>
   );
 }
+
+const inputStyle: React.CSSProperties = {
+  flexGrow: 1,
+  padding: "8px 14px",
+  borderRadius: 8,
+  border: "1px solid #333",
+  background: "#1a1a1a",
+  color: "#fff",
+  fontSize: 14,
+};
 
 const buttonStyle: React.CSSProperties = {
   padding: "8px 14px",
