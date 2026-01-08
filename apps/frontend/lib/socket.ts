@@ -1,4 +1,4 @@
-import { GatewayEvent } from "../../../packages/common/src/events/message.events.js";
+import { GatewayEvent } from "@sentinel/common/events/message.events";
 
 let socket: WebSocket | null = null;
 
