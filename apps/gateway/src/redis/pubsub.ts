@@ -18,6 +18,7 @@ const redis = new Redis(
 export async function  publishMessage(
   event: MessageCreatedEvent | MessageUpdatedEvent | UserTypingEvent | MessageEditedEvent | MessageRedactedEvent
 ) {
+  console.log("[publishMessage] payload keys:", Object.keys(event.payload));
   await redis.publish(
       "sentinel-events",
       JSON.stringify(event)

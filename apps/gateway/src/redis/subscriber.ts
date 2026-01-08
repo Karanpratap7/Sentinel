@@ -18,23 +18,23 @@ export function startSubscriber() {
 
         switch (event.type) {
             case "MESSAGE_CREATED":
-                broadcastToRoom(event.payload.room_id, event);
+                broadcastToRoom(event.payload.roomId, event);
                 break;
 
             case "USER_TYPING":
-                broadcastToRoom(event.payload.room_id, event);
+                broadcastToRoom(event.payload.roomId, event);
                 break;
 
             case "MESSAGE_UPDATED":
-                broadcastToRoom(event.payload.room_id, event);
+                broadcastToRoom(event.payload.roomId, event);
                 break;
         }
     });
 }
 
-function broadcastToRoom(room_id: string, message: any) {
-    const connections = getRoomConnections(room_id);
-    console.log("[subscriber] broadcasting to room:", room_id, "connections:", connections?.size);
+function broadcastToRoom(roomId: string, message: any) {
+    const connections = getRoomConnections(roomId);
+    console.log("[subscriber] broadcasting to room:", roomId, "connections:", connections?.size);
     if (!connections) return;
 
     connections.forEach((ws, userId) => {

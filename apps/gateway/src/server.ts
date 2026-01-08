@@ -2,7 +2,6 @@ import {WebSocketServer, WebSocket } from "ws";
 import { authenticateSocket } from "./auth/socket.auth.js";
 import { routeMessage } from "./socket/socket.router.js";
 import { removeConnection } from "./socket/connection.store.js";
-import "./redis/subscriber.js"
 
 export function setupWebSocket(wss: WebSocketServer) {
     wss.on("connection", async (ws: WebSocket, req) => {
