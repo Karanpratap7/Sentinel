@@ -7,7 +7,8 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"npm run dev --prefix apps/api\" \"npm run dev --prefix apps/gateway\" \"npm run dev --prefix apps/frontend\""
   },
   "keywords": [],
   "author": "",
@@ -20,6 +21,7 @@
   },
   "devDependencies": {
     "@types/node": "^25.0.3",
+    "concurrently": "^9.2.1",
     "typescript": "^5.9.3"
   }
 }

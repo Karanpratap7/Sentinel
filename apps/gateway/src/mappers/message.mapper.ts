@@ -5,7 +5,7 @@ export function toMessageCreatedEvent(row: any): MessageCreatedEvent {
         type: "MESSAGE_CREATED",
         payload: {
             id: row.id,
-            roomdId: row.room_id,
+            roomId: row.room_id,
             senderId: row.sender_id,
             content: row.content,
             status: row.status,

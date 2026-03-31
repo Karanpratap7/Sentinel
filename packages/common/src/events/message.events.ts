@@ -2,7 +2,7 @@ type MessageCreatedEvent = {
     type: "MESSAGE_CREATED";
     payload: {
         id: string;
-        roomdId: string;
+        roomId: string;
         senderId: string;
         content: string;
         status: "visible";
