@@ -18,6 +18,7 @@ export async function authenticateSocket(req: IncomingMessage): Promise<AuthUser
     }
 
     const decoded = jwt.verify(token, JWT_SECRET);
+    const userKey = decoded.sub;
 
     if (typeof decoded !== "object" || !("id" in decoded)) {
         throw new Error("Invalid token payload");
